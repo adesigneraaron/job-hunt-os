@@ -20,6 +20,10 @@ Check it can render PDFs:
 If it can't find a browser, install Google Chrome or Chromium — that's the one
 hard requirement.
 
+**On Windows**, you also need [Git for Windows](https://git-scm.com/downloads/win)
+installed first — it supplies the shell these scripts run in. Full details in
+[windows.md](windows.md).
+
 ## 2. Build your profile (10–15 min)
 
 Open Claude Code in the folder where you want your job hunt to live, then:

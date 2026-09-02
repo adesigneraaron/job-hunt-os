@@ -86,8 +86,10 @@ Deliberate limits, not missing features:
 
 - Claude Code
 - Google Chrome, Chromium, or Edge — used to turn HTML into PDF
-- Python 3, and optionally `pymupdf` (`pip3 install pymupdf`) to verify resumes
+- Python 3, and optionally `pymupdf` (`pip install pymupdf`) to verify resumes
   stay one page
+- **On Windows:** also [Git for Windows](https://git-scm.com/downloads/win),
+  which supplies the shell these scripts run in. See [docs/windows.md](docs/windows.md).
 
 Run `/job-hunt-os:doctor` if anything misbehaves; it names the exact fix.
 

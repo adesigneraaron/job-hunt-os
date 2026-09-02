@@ -93,7 +93,12 @@ else
 fi
 
 # --- 2. Machine-specific absolute paths -------------------------------------
-if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- '/(Users|home)/[a-z0-9_.-]+/' . "$SHADOW" 2>/dev/null); then
+# A real leak is /Users/somebody/; /Users/you/ in documentation is a placeholder.
+# Filter the obvious placeholders out so the gate doesn't cry wolf — a check
+# people learn to ignore is worse than no check.
+PLACEHOLDER_USER='/(Users|home)/(you|user|username|yourname|your-name|me|<[^>]+>|\{\{[^}]+\}\}|USERNAME|YOU)/'
+if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- '/(Users|home)/[a-zA-Z0-9_.-]+/' . "$SHADOW" 2>/dev/null \
+          | grep -vE "$PLACEHOLDER_USER"); then
   red "LEAK: absolute home-directory paths (nothing may point at one machine):"
   sed 's/^/    /' <<<"$hits"; FAIL=1
 fi

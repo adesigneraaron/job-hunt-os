@@ -88,7 +88,7 @@ bash <plugin>/scripts/render_pdf.sh <workspace>/profile/resume-base.html <worksp
 
 Verify it is one page:
 ```
-python3 -c "import fitz,sys; d=fitz.open(sys.argv[1]); print(d.page_count)" <workspace>/profile/resume-base.pdf
+bash <plugin>/scripts/pagecount.sh <workspace>/profile/resume-base.pdf
 ```
 If it's over one page, cut the least-relevant bullets and re-render — don't
 shrink the type.

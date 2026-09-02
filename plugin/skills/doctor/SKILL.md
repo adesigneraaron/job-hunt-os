@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: Check that Job-Hunt OS can actually run — Chrome for PDF rendering, python3, PyMuPDF, the workspace, and the profile's completeness. Use when a Job-Hunt OS command fails, when PDFs won't render, or when the user asks whether their setup is working or how complete their profile is.
+description: Check that Job-Hunt OS can actually run — a browser for PDF rendering, Python, PyMuPDF, the workspace, and the profile's completeness. Use when a Job-Hunt OS command fails, when PDFs won't render, or when the user asks whether their setup is working or how complete their profile is.
 ---
 
 # Doctor
@@ -19,10 +19,16 @@ single most common setup failure.
 ## 2. Python
 
 ```
-python3 -c "import fitz; print('pymupdf', fitz.__doc__)" 2>&1
+bash <plugin>/scripts/pagecount.sh <any-pdf>
 ```
-PyMuPDF is used only to assert resumes stay one page. If missing, say it's
-optional and give the install line: `pip3 install pymupdf`.
+This resolves Python itself (`python3`, then `python`, then `py`) and reports
+`unknown` rather than failing when PyMuPDF is absent. PyMuPDF is used only to
+assert resumes stay one page, so it's optional — the install line is
+`pip install pymupdf`.
+
+On Windows, `python3` usually doesn't exist; `python` does. That's handled. If
+no Python is found at all, say so plainly: applications still build, only the
+tracker row and the page check are skipped.
 
 ## 3. Workspace
 

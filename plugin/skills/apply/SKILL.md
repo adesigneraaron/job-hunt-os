@@ -68,7 +68,7 @@ Plain glyphs (`•` `·` `–` `→` `★`) are fine.
 Render and verify:
 ```
 bash <plugin>/scripts/render_pdf.sh <workspace>/applications/<slug>/resume.html <workspace>/applications/<slug>/resume.pdf
-python3 -c "import fitz,sys;print(fitz.open(sys.argv[1]).page_count)" <workspace>/applications/<slug>/resume.pdf
+bash <plugin>/scripts/pagecount.sh <workspace>/applications/<slug>/resume.pdf
 ```
 If it prints 2, cut the least-relevant bullets and re-render. Never shrink the
 type to force a fit.
@@ -112,7 +112,7 @@ Write `applications/<slug>/prep-sheet.md` from the profile and anything in
 ## Step 7 — Log it
 
 ```
-python3 <plugin>/scripts/log_application.py --workspace <workspace> \
+bash <plugin>/scripts/log_application.sh --workspace <workspace> \
   --company "<company>" --title "<role>" --status "Ready to apply" \
   --location "<location>" --remote "<Yes/No/Hybrid>" --salary "<posted or blank>" \
   --jd-link "<url>" --resume "applications/<slug>/resume.pdf" --notes "<source>"
