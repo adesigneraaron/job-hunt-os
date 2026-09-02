@@ -92,10 +92,21 @@ var BODY_SCAN_CHARS  = 1000; // classify on subject + first N chars of body only
 var STATUS_FILL = { rejected: '#ea9999', interview: '#ffe599', applied: '#e0e0e0' }; // red / yellow / light grey
 
 // Skip your own replies and obvious job-board digests/alerts (not real status emails).
-// YOUR OWN email address — so the scanner skips your own sent replies.
-// Set this before first run.
-var SELF_EMAIL = 'you@example.com';
-var SELF_RE  = new RegExp(SELF_EMAIL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+// Your own address is detected automatically — the script runs as you, so it
+// already knows who you are. Nothing to configure.
+// Override only if the account running the script differs from the one you
+// apply from: Extensions > Apps Script > Project Settings > Script Properties,
+// key SELF_EMAIL.
+function selfEmail_() {
+  var override = PropertiesService.getScriptProperties().getProperty('SELF_EMAIL');
+  if (override) return override.trim();
+  try { return Session.getEffectiveUser().getEmail() || ''; } catch (err) { return ''; }
+}
+function selfRe_() {
+  var e = selfEmail_();
+  if (!e) return /^\b$/;   // matches nothing rather than everything
+  return new RegExp(e.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+}
 var NOISE_RE = /(job\s*alert|new\s+jobs\s+(for|matching)|recommended\s+for\s+you|jobs\s+you\s+may\s+be|jobs\s+for\s+you|weekly\s+(digest|job)|people\s+you\s+may\s+know|job\s+recommendations|based\s+on\s+your\s+profile)/i;
 
 // Words stripped when normalizing a company name for matching.
@@ -129,6 +140,9 @@ function buildQuery_() {
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('Job-Hunt')
+    .addItem('⚙  Set up (run me first)', 'setupWizard')
+    .addItem('✓  Check my setup', 'checkSetup')
+    .addSeparator()
     .addItem('Scan inbox now', 'scanInboxMenu')
     .addItem('File rejected rows away', 'moveRejectedRowsMenu')
     .addItem('Recolor statuses', 'recolorStatusesMenu')
@@ -157,6 +171,89 @@ function scanInboxMenu() {
        REJECTED_TAB + ' · ' + r.threads + ' emails scanned')
     : 'Nothing to scan.';
   ss.toast(msg, 'Job-Hunt · scan complete', 6);
+}
+
+
+// ============================ SETUP (template users) ============================
+// Everything a fresh copy of this sheet needs, done from the Job-Hunt menu.
+// The only step that can't be automated is deploying the web app, because
+// Google requires a human to authorise it — the wizard tells you exactly how.
+
+function setupWizard() {
+  var ui = SpreadsheetApp.getUi();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // 1. Tabs and headers
+  var made = [];
+  for (var name in HEADERS) {
+    var existed = !!ss.getSheetByName(name);
+    getOrCreateSheet_(ss, name);
+    if (!existed) made.push(name);
+  }
+
+  // 2. Hourly inbox scan — replace any existing one so re-running is safe
+  var removed = 0;
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'scanInbox') { ScriptApp.deleteTrigger(t); removed++; }
+  });
+  ScriptApp.newTrigger('scanInbox').timeBased().everyHours(1).create();
+
+  // 3. Who are we?
+  var me = selfEmail_();
+
+  var msg =
+    'Setup done.\n\n' +
+    '• Tabs ready: ' + Object.keys(HEADERS).join(', ') +
+      (made.length ? '  (created: ' + made.join(', ') + ')' : '  (all already present)') + '\n' +
+    '• Hourly inbox scan: installed' + (removed ? ' (replaced ' + removed + ' old one)' : '') + '\n' +
+    '• Reading mail as: ' + (me || 'UNKNOWN — see below') + '\n\n' +
+    'ONE STEP LEFT, and only if you want Claude to write rows here automatically:\n\n' +
+    '1. Deploy > New deployment > type "Web app"\n' +
+    '2. Execute as: Me     Who has access: Anyone\n' +
+    '3. Copy the web app URL it gives you\n' +
+    '4. On your computer, save it where only you can read it:\n\n' +
+    '     mkdir -p ~/.config/job-hunt-os\n' +
+    '     printf "%s\\n" "PASTE_URL_HERE" > ~/.config/job-hunt-os/webhook-url.txt\n\n' +
+    '5. In job-hunt/config/settings.json set:  { "tracker": "sheets" }\n\n' +
+    'Treat that URL like a password — anyone who has it can write rows here.\n\n' +
+    'Skipping that step is fine. The scanner still updates statuses from your\n' +
+    'email; you just add rows yourself instead of Claude adding them.\n\n' +
+    'Run "Check my setup" any time to confirm everything is still working.';
+
+  PropertiesService.getScriptProperties().setProperty('SETUP_DONE_AT', new Date().toISOString());
+  ui.alert('Job-Hunt OS', msg, ui.ButtonSet.OK);
+}
+
+function checkSetup() {
+  var ui = SpreadsheetApp.getUi();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var lines = [];
+  var ok = function (b) { return b ? 'OK   ' : 'MISSING  '; };
+
+  for (var name in HEADERS) {
+    lines.push(ok(!!ss.getSheetByName(name)) + 'tab "' + name + '"');
+  }
+
+  var trig = ScriptApp.getProjectTriggers().filter(function (t) {
+    return t.getHandlerFunction() === 'scanInbox';
+  });
+  lines.push(ok(trig.length > 0) + 'hourly inbox scan' +
+             (trig.length > 1 ? '  (' + trig.length + ' duplicates — re-run Set up)' : ''));
+
+  var me = selfEmail_();
+  lines.push(ok(!!me) + 'reading mail as ' + (me || '(could not detect — set SELF_EMAIL in Script Properties)'));
+
+  var app = ss.getSheetByName(APP_TAB);
+  var rows = app ? Math.max(0, app.getLastRow() - 1) : 0;
+  lines.push('     ' + rows + ' application row(s) tracked');
+
+  var seen = loadSeen_();
+  lines.push('     ' + Object.keys(seen || {}).length + ' email(s) already processed');
+
+  var done = PropertiesService.getScriptProperties().getProperty('SETUP_DONE_AT');
+  lines.push(done ? '     setup last run ' + done.slice(0, 10) : '     setup has never been run — do that first');
+
+  ui.alert('Job-Hunt OS — setup check', lines.join('\n'), ui.ButtonSet.OK);
 }
 
 // ============================ WEBHOOK (unchanged) ============================
@@ -224,7 +321,7 @@ function scanInbox() {
 
     var from = msg.getFrom() || '';
     seen[id] = 1;                           // mark handled regardless (avoid re-scan churn)
-    if (SELF_RE.test(from) || NOISE_RE.test(from)) continue;  // skip own replies + job-board digests
+    if (selfRe_().test(from) || NOISE_RE.test(from)) continue;  // skip own replies + job-board digests
 
     var subject = msg.getSubject() || '';
     if (NOISE_RE.test(subject)) continue;
