@@ -21,13 +21,13 @@ For each job, one folder:
 ```
 job-hunt/applications/acme-product-designer/
 ├── jd.md                  the posting, captured
-├── resume.pdf             tailored, one page          ← example/resume.pdf
+├── resume.pdf             tailored, one page          ← example/operations-manager/resume-after.pdf
 ├── cover-letter.pdf       + a .md version for web forms
 ├── common-questions.md    pre-written answers to the form questions
 └── prep-sheet.md          likely questions + which of your stories to use
 ```
 
-See [`example/resume.pdf`](example/resume.pdf) for real output.
+See the [worked examples](example/) — including a before/after that shows what the onboarding interview pulls out of an ordinary resume.
 
 ## Install
 

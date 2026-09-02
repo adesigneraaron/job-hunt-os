@@ -1,18 +1,50 @@
-# Worked example
+# Worked examples
 
-A fictional designer, a fictional job, and the real output the tool produces.
+Two fictional people, to show what the tool actually produces — and what it
+refuses to produce.
 
-| File | What it is |
+## [`operations-manager/`](operations-manager/) — start here
+
+A warehouse operations manager with a completely ordinary resume: duty-listing
+bullets, filler summary, and **not a single number anywhere**. That's what most
+real resumes look like.
+
+| File | What it shows |
 |---|---|
-| `master-profile.md` | A filled-in profile — what `/job-hunt-os:onboard` produces from your resume plus the gap interview. This is the input to everything else. |
-| `jd.md` | A job posting, as captured by `/job-hunt-os:apply`. |
-| `resume.html` / `resume.pdf` | The tailored resume. One page, ATS-safe, built only from facts present in the profile. |
+| `original-resume.txt` | What he started with |
+| `interview-transcript.md` | The onboarding questions, and how he answered |
+| `master-profile.md` | The profile that produced |
+| `resume-before.pdf` / `resume-after.pdf` | Same template, same font — only the words differ |
 
-Compare the profile to the resume: every number on the resume — 11 minutes to
-4, 31% activation, 62% fewer tickets — appears verbatim in the profile's
-`metrics` fields. Nothing was invented, rounded, or upgraded in transit. That's
-the property the whole system is built to preserve.
+**The whole point is in the transcript.** Asked what changed because he was
+there, his first answer was *"I ran the warehouse. Things ran smoother, I
+guess."* The second, more concrete ask is what produced everything:
 
-Note what *didn't* make the resume: the Halcyon role is one line, because its
-`weighting:` note says so, and the story-bank material stays out of the resume
-entirely — it's for interviews.
+- late shipments from roughly 1 in 5 orders to about 1 in 50
+- a monthly two-day inventory shutdown replaced by two hours a week of cycle counting
+- the site's worst shift on safety taken to ~18 months incident-free
+- a team of 14 across two shifts, nine of them his hires
+
+The "before" resume has nine numbers on it. **All nine are dates or his phone
+number** — none describe his work. The "after" has fourteen that do.
+
+Every one of those facts was already true when he wrote the first version. He
+just didn't think of them as resume material; he thought of them as his job.
+
+Note also what survived: *roughly*, *about*, *around 18 months*. He hedged, and
+the hedge stayed in. He has to defend these in an interview, and a number he
+can't defend exactly is worse than one he's honest about.
+
+## [`design-product-designer/`](design-product-designer/)
+
+A senior product designer with a strong profile already, showing a tailored
+package built against a specific job posting (`jd.md`).
+
+Compare `master-profile.md` to `resume.pdf`: every number on the resume — 11
+minutes to 4, 31% activation, 62% fewer tickets — appears verbatim in the
+profile's `metrics` fields. Nothing was invented, rounded, or upgraded in
+transit. That's the property the whole system exists to preserve.
+
+Note what *didn't* make the resume: the earliest role gets one line, because its
+`weighting:` note says so, and the story-bank material stays out entirely — it's
+for interviews, not resumes.

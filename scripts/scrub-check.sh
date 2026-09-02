@@ -14,6 +14,39 @@ PATTERNS_FILE="scripts/scrub-patterns.txt"
 FAIL=0
 SELF_EXCLUDE=( --exclude-dir=.git --exclude=scrub-check.sh --exclude=scrub-patterns.txt )
 
+# --- PDFs are binary, so grep skips them. Extract their text + metadata into a
+# --- temp shadow directory and scan that alongside the source tree. PDFs can
+# --- carry an author name, a title, or the full filesystem path they were
+# --- rendered from — none of which is visible to a plain text search.
+SHADOW="$(mktemp -d)"
+trap 'rm -rf "$SHADOW"' EXIT
+shadow_pdfs() {
+  local n=0
+  while IFS= read -r -d '' pdf; do
+    local out="$SHADOW/$(echo "${pdf#./}" | tr '/' '_').txt"
+    if python3 - "$pdf" "$out" 2>/dev/null <<'PYEOF'
+import sys
+try:
+    import fitz
+except ImportError:
+    sys.exit(9)
+doc = fitz.open(sys.argv[1])
+with open(sys.argv[2], "w", encoding="utf-8", errors="replace") as fh:
+    for k, v in (doc.metadata or {}).items():
+        if v: fh.write(f"[metadata:{k}] {v}\n")
+    for page in doc:
+        fh.write(page.get_text())
+PYEOF
+    then n=$((n+1))
+    else
+      strings "$pdf" > "$out" 2>/dev/null && n=$((n+1))
+    fi
+  done < <(find . -name '*.pdf' -not -path './.git/*' -print0)
+  echo "$n"
+}
+PDF_COUNT="$(shadow_pdfs)"
+echo "scanning $PDF_COUNT PDF(s) for embedded text and metadata"
+
 red()  { printf '\033[31m%s\033[0m\n' "$*"; }
 green(){ printf '\033[32m%s\033[0m\n' "$*"; }
 
@@ -35,7 +68,7 @@ else
     case "$kind" in
       BAN)
         pat=${line#BAN }
-        if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- "$pat" . 2>/dev/null); then
+        if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- "$pat" . "$SHADOW" 2>/dev/null); then
           red "LEAK: pattern /$pat/ found:"; sed 's/^/    /' <<<"$hits"; FAIL=1
         fi
         ;;
@@ -43,7 +76,7 @@ else
         rest=${line#ALLOW-IN }
         allowed=$(awk '{print $1}' <<<"$rest")
         pat=${rest#* }
-        if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- "$pat" . 2>/dev/null); then
+        if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- "$pat" . "$SHADOW" 2>/dev/null); then
           while IFS= read -r hit; do
             f=${hit%%:*}; f=${f#./}
             IFS=':' read -ra ok <<<"$allowed"
@@ -60,13 +93,13 @@ else
 fi
 
 # --- 2. Machine-specific absolute paths -------------------------------------
-if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- '/(Users|home)/[a-z0-9_.-]+/' . 2>/dev/null); then
+if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- '/(Users|home)/[a-z0-9_.-]+/' . "$SHADOW" 2>/dev/null); then
   red "LEAK: absolute home-directory paths (nothing may point at one machine):"
   sed 's/^/    /' <<<"$hits"; FAIL=1
 fi
 
 # --- 3. Live credentials / endpoints ----------------------------------------
-if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- 'script\.google\.com/macros/s/[A-Za-z0-9_-]{20,}|AIza[A-Za-z0-9_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----' . 2>/dev/null); then
+if hits=$(grep -rInE "${SELF_EXCLUDE[@]}" -- 'script\.google\.com/macros/s/[A-Za-z0-9_-]{20,}|AIza[A-Za-z0-9_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----' . "$SHADOW" 2>/dev/null); then
   red "LEAK: live credential or webhook endpoint:"; sed 's/^/    /' <<<"$hits"; FAIL=1
 fi
 
@@ -85,6 +118,7 @@ fi
 
 echo
 if (( FAIL )); then
+  echo "(paths under $SHADOW are extracted PDF contents — fix the source .pdf)" >&2
   red "BLOCKED — do not publish. Fix everything above, then re-run."
   exit 1
 fi
