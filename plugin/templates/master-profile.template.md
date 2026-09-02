@@ -25,7 +25,7 @@
 - target_salary: «Currency + floor. Note whether to anchor to a posted band when it's higher.»
 - headline: "«One sentence: role + years + what you do, in your own voice»"
 
-### Voice lenses
+**Voice lenses**
 > Most people need one. Add a second only if you genuinely apply to two kinds of
 > role (e.g. IC designer vs. founder, engineer vs. eng manager) that need
 > different framing of the same facts. Each role below carries one bullet set
@@ -34,7 +34,7 @@
 - lenses: [default]
 - lens_default: "«How you want to sound by default — e.g. 'senior IC, evidence-first'»"
 
-### Extra application-form fields
+**Extra application-form fields**
 > Optional. Things ATS forms ask for that aren't on a resume. Delete if unused.
 
 - extra_fields:
@@ -46,6 +46,10 @@
 
 > One `###` block per role, most recent first. `tags` drive JD matching.
 > `metrics` are quoted verbatim downstream and must never be altered or rounded.
+>
+> **Convention:** `###` means "a job" and nothing else in this file. Everything
+> else uses bold. Commands count your roles this way, so don't add other `###`
+> headings.
 
 ### «Company» — «Your Title»  («Start» – «End or present»)
 tags: [«keyword», «keyword», «keyword»]
@@ -103,7 +107,7 @@ weighting: «Optional — e.g. "feature prominently" or "≤1 bullet, don't lead
   - dates: «Month Year – Month Year» (years-only on resumes; months for forms that demand them)
   - covers: «What it actually taught — used for "tell us about your program" fields»
 
-### Education summary (for application forms — reused verbatim)
+**Education summary** (for application forms — reused verbatim)
 
 **Full version:**
 > «2–4 sentences on what your program was and why it connects to this work.

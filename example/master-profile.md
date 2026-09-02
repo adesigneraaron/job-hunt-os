@@ -18,7 +18,7 @@
 - target_salary: CAD 130,000+ floor. Anchor to the posted band when it's higher.
 - headline: "Product designer with 8 years on B2B software — logistics and payments, research through shipped front-end"
 
-### Voice lenses
+**Voice lenses**
 - lenses: [default]
 - lens_default: "Senior IC. Evidence-first, plain-spoken, owns outcomes not deliverables."
 
@@ -87,7 +87,7 @@ weighting: Earliest role — 1 bullet is enough unless the job is agency or clie
   - dates: September 2012 – April 2016
   - covers: perception, decision-making, human-computer interaction
 
-### Education summary (for application forms — reused verbatim)
+**Education summary** (for application forms — reused verbatim)
 
 **Full version:**
 > Human Factors and Psychology — the study of how people perceive, decide, and

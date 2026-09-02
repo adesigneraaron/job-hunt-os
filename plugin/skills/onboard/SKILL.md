@@ -103,5 +103,7 @@ fix persists into every future application.
 - What's filled; what's still `«»`.
 - **Profile strength:** how many roles carry a real metric, out of how many.
   State it plainly — that ratio predicts resume quality more than anything else.
+  Count roles as the `###` blocks inside `## Experience` only; a role has a
+  metric when its `metrics:` list holds at least one non-`«»` entry.
 - What to run next: `/job-hunt-os:apply <job-url>`.
 - How to improve later: re-run `/job-hunt-os:onboard <section>` any time.

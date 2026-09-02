@@ -36,7 +36,11 @@ Confirm the expected subdirectories and `config/settings.json` exist.
 Read `profile/master-profile.md` and report:
 
 - count of remaining `«»` markers, and which sections they're in
-- **roles with a real metric, out of total roles** — the number that matters
+- **roles with a real metric, out of total roles** — the number that matters.
+  Count roles as the `###` blocks **inside the `## Experience` section only** —
+  `###` is reserved for jobs, but scope the count anyway so a stray heading
+  can't inflate it. A role counts as having a metric when its `metrics:` list
+  has at least one entry that isn't `«»`.
 - whether `resume-base.html` exists and has been rendered
 
 If a role has no metric, name it and say what to run:
