@@ -1,0 +1,8 @@
+{
+  "name": "job-hunt-os",
+  "description": "A job-application pipeline built on one master profile: onboard from your existing resume, then generate tailored resumes, cover letters, application answers, and interview prep for each role. Never fabricates facts.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aaron Kwong"
+  }
+}

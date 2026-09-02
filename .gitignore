@@ -1,0 +1,29 @@
+# User data — must never be committed to the public repo
+job-hunt/
+applications/
+scout-log.json
+tracker/
+profile/
+*.local.json
+settings.local.json
+
+# Credentials
+webhook-url.txt
+*service-account*.json
+sheet-config.json
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Build artifacts
+*.pdf
+!example/**/*.pdf
+__pycache__/
+*.pyc
+
+scripts/scrub-patterns.txt

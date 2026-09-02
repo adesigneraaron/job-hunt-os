@@ -1,0 +1,145 @@
+<!--
+  Job-Hunt OS — resume template (single source of visual truth)
+  -------------------------------------------------------------------
+  /job-hunt-os:onboard fills every FILL region from master-profile.md to
+  produce profile/resume-base.html — your master resume.
+  /job-hunt-os:apply then COPIES that and rewrites only the FILL regions to
+  tailor it to one job description. Never edit the CSS or structure.
+
+  RULES (enforced by the commands):
+   • Select and rephrase facts from master-profile.md ONLY. Never fabricate.
+   • ONE page. Drop the least-relevant bullets and roles for the JD.
+   • ATS-safe: single column, real text, no tables, icons, or images.
+   • NO emoji — headless Chrome renders them as tofu boxes. Plain glyphs
+     (• · – → ★) are fine; anything colourful is not.
+
+  Render:
+    bash scripts/render_pdf.sh <in.html> <out.pdf>
+
+  Restyling: the palette is four variables in :root below. Change --accent to
+  recolour the whole document.
+-->
+<meta charset="utf-8">
+<title>Maya Okonkwo — Resume</title>
+<style>
+  :root{
+    --accent:#1f4e79;    /* headers, name, links */
+    --ink:#000;          /* body */
+    --muted:#555;        /* title, dates, descriptors */
+    --rule:#c9d2dc;      /* dividers */
+  }
+  @page{ size: Letter; margin: 0.5in 0.6in; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:Arial,'Helvetica Neue',Helvetica,'Liberation Sans',sans-serif;
+    color:var(--ink); font-size:10.3pt; line-height:1.28;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .name{ font-size:20pt; font-weight:700; color:var(--accent); letter-spacing:.2px; margin:0; }
+  .title{ font-size:12pt; color:var(--muted); margin:2px 0 4px; }
+  .contact{ font-size:10.5pt; margin:0 0 2px; }
+  .contact a{ color:var(--accent); text-decoration:underline; }
+  .contact .sep{ color:var(--ink); padding:0 4px; }
+  .section{ margin-top:9px; }
+  h2{
+    font-size:12pt; font-weight:700; color:var(--accent);
+    text-transform:uppercase; letter-spacing:.4px;
+    margin:0 0 4px; padding-bottom:2px; border-bottom:1.5px solid var(--accent);
+  }
+  .entry{ margin:0 0 6px; }
+  .entry:last-child{ margin-bottom:0; }
+  .entry-head{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  .role{ font-size:11pt; font-weight:700; margin:0; }
+  .role .at{ font-weight:400; }
+  .dates{ font-size:10pt; color:var(--muted); white-space:nowrap; }
+  .descriptor{ font-style:italic; font-size:10pt; color:var(--muted); margin:1px 0 3px; }
+  ul{ margin:2px 0 0; padding-left:16px; }
+  li{ margin:0 0 2.5px; }
+  li::marker{ color:var(--ink); }
+  b{ font-weight:700; }
+  .summary{ margin:0; }
+  .skills p{ margin:0 0 2px; }
+  .skills .cat{ font-weight:700; }
+</style>
+
+<!-- HEADER -->
+<p class="name">Maya Okonkwo</p>
+<p class="title">Senior Product Designer</p>
+<p class="contact">
+  Toronto, ON <span class="sep">·</span> +1 416 555 0142 <span class="sep">·</span>
+  maya@example.com <span class="sep">·</span>
+  <a href="https://example.com">mayaokonkwo.example</a> <span class="sep">·</span>
+  <a href="https://linkedin.com/in/example">linkedin.com/in/mayaokonkwo</a>
+</p>
+
+<!-- ============================ SUMMARY ============================ -->
+<div class="section">
+  <h2>Summary</h2>
+<p class="summary">Product designer with 8 years on B2B software, most of it
+  in logistics and payments. At Northwind, redesigned the dispatch console that
+  <b>cut driver check-in time from 11 minutes to 4</b> and took support tickets
+  down <b>62%</b>. Comfortable owning a problem from research through shipped
+  front-end. Looking to do that on a small team where design has a seat at the
+  strategy table.</p>
+</div>
+
+<!-- ============================ EXPERIENCE ============================ -->
+<div class="section">
+  <h2>Experience</h2>
+
+  <div class="entry">
+    <div class="entry-head">
+      <p class="role">Senior Product Designer <span class="at">| Northwind Logistics</span></p>
+      <span class="dates">Mar 2021 – Present</span>
+    </div>
+    <p class="descriptor">Fleet-management software used by 400+ regional carriers.</p>
+    <ul>
+      <li>Rebuilt the dispatch console around the two tasks that made up 80% of daily use, <b>cutting driver check-in from 11 minutes to 4</b> across 6,000 daily check-ins.</li>
+      <li>Replaced a 14-field onboarding form with a progressive flow, <b>lifting carrier activation 31%</b> and cutting support tickets <b>62%</b>.</li>
+      <li>Built and maintained the design system now used by three product teams; wrote the front-end for its 22 core components.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <p class="role">Product Designer <span class="at">| Kestrel Payments</span></p>
+      <span class="dates">Jun 2018 – Feb 2021</span>
+    </div>
+    <ul>
+      <li>Owned the merchant refunds experience end to end — research, flows, and UI — <b>reducing refund-related chargebacks 18%</b> in two quarters.</li>
+      <li>Ran the team's first usability programme: 40+ moderated sessions that reset the roadmap for two consecutive quarters.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <p class="role">UX Designer <span class="at">| Halcyon Studio</span></p>
+      <span class="dates">Sep 2016 – May 2018</span>
+    </div>
+    <ul>
+      <li>Designed web products for eight client engagements across health and education; led three of them as the sole designer.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================ EDUCATION ============================ -->
+<div class="section">
+  <h2>Education</h2>
+  <div class="entry">
+    <div class="entry-head">
+      <p class="role">University of Toronto — B.Sc., Human Factors &amp; Psychology</p>
+      <span class="dates">2012 – 2016</span>
+    </div>
+    <p class="descriptor">Perception, decision-making, and human-computer interaction.</p>
+  </div>
+</div>
+
+<!-- ============================ SKILLS ============================ -->
+<div class="section skills">
+  <h2>Skills</h2>
+  <p><span class="cat">Design</span>&nbsp; Product &amp; UX Design · Design Systems · Interaction Design · Information Architecture · Prototyping · Figma</p>
+  <p><span class="cat">Domain</span>&nbsp; B2B SaaS · Logistics · Payments · Operational Tooling · Data-dense Interfaces</p>
+  <p><span class="cat">Research</span>&nbsp; Usability Testing · Contextual Inquiry · Survey Design · Analytics</p>
+  <p><span class="cat">Technical</span>&nbsp; HTML/CSS · React · Design Tokens · Git</p>
+</div>

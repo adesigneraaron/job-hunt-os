@@ -1,0 +1,69 @@
+<!--
+  Job-Hunt OS — cover letter template (matches the resume letterhead)
+  -------------------------------------------------------------------
+  /job-hunt-os:apply copies this and fills only the FILL regions.
+
+  BODY guidance (enforced by /apply):
+   • Three paragraphs, 250–320 words total. Hook → proof → close.
+   • The hook names something specific about THIS company. If it could be
+     pasted into another application unchanged, rewrite it.
+   • The proof paragraph reuses facts from master-profile.md verbatim.
+     Never invent a number, a client, or an opinion about their product.
+   • No "I am writing to apply for". No "I believe I would be a great fit".
+-->
+<meta charset="utf-8">
+<title><!--FILL:NAME-->«Your Name» — Cover Letter</title>
+<style>
+  :root{ --accent:#1f4e79; --ink:#000; --muted:#555; --rule:#c9d2dc; }
+  @page{ size: Letter; margin: 0.75in 0.8in; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:Arial,'Helvetica Neue',Helvetica,'Liberation Sans',sans-serif;
+    color:var(--ink); font-size:11pt; line-height:1.45;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .name{ font-size:20pt; font-weight:700; color:var(--accent); letter-spacing:.2px; margin:0; }
+  .title{ font-size:12pt; color:var(--muted); margin:2px 0 4px; }
+  .contact{ font-size:10.5pt; margin:0 0 6px; padding-bottom:8px; border-bottom:1px solid var(--rule); }
+  .contact a{ color:var(--accent); text-decoration:underline; }
+  .contact .sep{ color:var(--ink); padding:0 4px; }
+  .date{ margin:14px 0 12px; color:var(--muted); }
+  .addressee{ margin:0 0 14px; }
+  p.body{ margin:0 0 11px; }
+  .sign{ margin-top:18px; }
+  .sign .who{ font-weight:700; }
+</style>
+
+<!--FILL:HEADER — identical to the resume header, from the profile -->
+<p class="name">«Your Name»</p>
+<p class="title">«Target job title»</p>
+<p class="contact">
+  «City, Region» <span class="sep">·</span> «+1 555 555 5555» <span class="sep">·</span>
+  «you@example.com» <span class="sep">·</span>
+  <a href="https://«yoursite.com»">«yoursite.com»</a>
+</p>
+
+<p class="date"><!--FILL:DATE-->«Month Day, Year»</p>
+
+<div class="addressee"><!--FILL:ADDRESSEE-->«Hiring Team»<br>«Company»</div>
+
+<p class="body"><!--FILL:GREETING-->Dear «Hiring Team»,</p>
+
+<!--FILL:BODY — three paragraphs. Hook (something specific to them) → proof
+    (your most relevant outcome, with its real number) → close (what you want
+    and a clear next step). 250–320 words. -->
+<p class="body">«Hook — the specific thing about this company or role that made
+you apply. One or two sentences.»</p>
+
+<p class="body">«Proof — the most relevant thing you've actually done, with the
+number attached, drawn verbatim from your profile. Connect it explicitly to
+what they said they need.»</p>
+
+<p class="body">«Close — what you'd want to work on there, and a plain next
+step. No pleading, no restating the resume.»</p>
+
+<div class="sign">
+  <p class="body">Sincerely,</p>
+  <p class="body sign-name"><span class="who"><!--FILL:SIGNATURE-->«Your Name»</span></p>
+</div>

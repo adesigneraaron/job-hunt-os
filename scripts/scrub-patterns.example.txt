@@ -1,0 +1,22 @@
+# Personal identifiers the publish gate must never find in this repo.
+# Copy to scrub-patterns.txt (gitignored) and fill in YOUR details.
+#
+#   BAN <regex>                        must not appear anywhere
+#   ALLOW-IN <file:file> <regex>       may appear only in those files
+#
+# Patterns are extended regex (grep -E), case-insensitive.
+
+# Your name is fine in the license and manifests, nowhere else.
+ALLOW-IN LICENSE:NOTICE:README.md:.claude-plugin/marketplace.json:plugin/.claude-plugin/plugin.json Jane Q. Doe
+
+# Contact details — banned everywhere.
+BAN jane\.doe@example\.com
+BAN \+?1[ -]?[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{4}
+BAN janedoe\.example
+BAN linkedin\.com/in/jane-doe
+
+# Former employers, clients, and projects — banned everywhere.
+BAN (AcmeCorp|BetaClient|ProjectNimbus)
+
+# Anything else identifying: corporate numbers, addresses, school IDs.
+BAN [0-9]{9}

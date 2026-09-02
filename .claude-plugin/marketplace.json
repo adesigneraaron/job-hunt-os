@@ -1,0 +1,15 @@
+{
+  "name": "job-hunt-os",
+  "owner": {
+    "name": "Aaron Kwong",
+    "url": "https://github.com/adesigneraaron"
+  },
+  "plugins": [
+    {
+      "name": "job-hunt-os",
+      "source": "./plugin",
+      "description": "Turn one profile into tailored resumes, cover letters, and interview prep for every job you apply to.",
+      "version": "0.1.0"
+    }
+  ]
+}
