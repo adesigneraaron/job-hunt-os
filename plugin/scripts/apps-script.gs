@@ -204,17 +204,20 @@ function setupWizard() {
   var msg =
     'Setup done.\n\n' +
     '• Tabs ready: ' + Object.keys(HEADERS).join(', ') +
-      (made.length ? '  (created: ' + made.join(', ') + ')' : '  (all already present)') + '\n' +
+      (made.length === Object.keys(HEADERS).length ? '  (all created)'
+        : made.length ? '  (created: ' + made.join(', ') + ')'
+        : '  (all already present)') + '\n' +
     '• Hourly inbox scan: installed' + (removed ? ' (replaced ' + removed + ' old one)' : '') + '\n' +
     '• Reading mail as: ' + (me || 'UNKNOWN — see below') + '\n\n' +
     'ONE STEP LEFT, and only if you want Claude to write rows here automatically:\n\n' +
     '1. Deploy > New deployment > type "Web app"\n' +
-    '2. Execute as: Me     Who has access: Anyone\n' +
-    '3. Copy the web app URL it gives you\n' +
-    '4. On your computer, save it where only you can read it:\n\n' +
+    '2. Set "Execute as" to: Me\n' +
+    '3. Set "Who has access" to: Anyone\n' +
+    '4. Copy the web app URL it gives you\n' +
+    '5. On your computer, save it where only you can read it:\n\n' +
     '     mkdir -p ~/.config/job-hunt-os\n' +
     '     printf "%s\\n" "PASTE_URL_HERE" > ~/.config/job-hunt-os/webhook-url.txt\n\n' +
-    '5. In job-hunt/config/settings.json set:  { "tracker": "sheets" }\n\n' +
+    '6. In job-hunt/config/settings.json set:  { "tracker": "sheets" }\n\n' +
     'Treat that URL like a password — anyone who has it can write rows here.\n\n' +
     'Skipping that step is fine. The scanner still updates statuses from your\n' +
     'email; you just add rows yourself instead of Claude adding them.\n\n' +
