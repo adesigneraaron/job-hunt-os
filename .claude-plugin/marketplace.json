@@ -9,7 +9,7 @@
       "name": "job-hunt-os",
       "source": "./plugin",
       "description": "Turn one profile into tailored resumes, cover letters, and interview prep for every job you apply to.",
-      "version": "0.1.3"
+      "version": "0.1.4"
     }
   ]
 }

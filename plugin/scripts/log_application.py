@@ -68,7 +68,11 @@ def find_workspace(explicit=None):
         cand = os.path.join(d, "job-hunt")
         if os.path.isdir(cand):
             return cand
-        if os.path.basename(d) == "job-hunt" and os.path.isdir(os.path.join(d, "profile")):
+        # Recognise a workspace by its SHAPE, not its name — init_workspace.sh
+        # accepts any name, and doctor.sh already matches on shape. Requiring
+        # the literal name "job-hunt" here meant a custom name silently fell
+        # back to paste-mode and the row was never written.
+        if os.path.isdir(os.path.join(d, "profile")) and os.path.isdir(os.path.join(d, "applications")):
             return d
         parent = os.path.dirname(d)
         if parent == d:
