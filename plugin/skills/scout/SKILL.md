@@ -32,6 +32,12 @@ generally:
   query — the first read usually returns only the top 20–30 rows.
 - **Search the ATSs directly** for anything fresh. When a company surfaces,
   open its board root to see every role it has open, not just the matched one.
+- **Verify every posting before scoring it.** Search indexes go badly stale: in
+  one bounded test, three of four Greenhouse results were already gone. A
+  posting URL that redirects to the company's board root — you asked for one job
+  and got a list of all their jobs — means **that posting is closed**. Drop it,
+  and say how many you dropped. Never score a role from a search snippet alone;
+  the snippet outlives the job.
 - **Never touch LinkedIn or Indeed.** Their terms prohibit automated access.
   If the user wants those, they browse and paste into `/job-hunt-os:apply`.
 - Respect rate limits. If a source pushes back, stop and note it.
@@ -81,5 +87,12 @@ For every package built:
 What was built and where, what's waiting on the user's pick, which sources
 failed or were skipped and why, and the nudge:
 `/job-hunt-os:formassist <slug>` to fill the form.
+
+**Report an empty run as an empty run.** If nothing qualified, say so and say
+why — expired postings, out of area, excluded by their own config — and name
+which sources you actually reached. "Nothing today" from one source is a very
+different fact from "nothing today" across all of them, and the user cannot tell
+the difference unless you say. Never pad a thin run with roles that failed
+verification.
 
 Append everything seen to `scout-log.json` so tomorrow's run doesn't repeat it.
