@@ -99,9 +99,9 @@ Everything lives in a `job-hunt/` folder you own, on your machine. Nothing is
 uploaded anywhere, and no analytics are collected. The tracker is a plain CSV
 by default — no accounts, no setup. If you'd rather have a Google Sheet that
 updates its own statuses from your inbox — rejections filed away, interviews
-never touched — copy the template and run one menu item:
-[`docs/sheets-setup.md`](docs/sheets-setup.md). About five minutes, entirely
-optional.
+never touched — [copy the template](https://docs.google.com/spreadsheets/d/1_ChlUZuTMOmS0gIFczzlLqszrSlIcJtcmpjQfT8VUQA/copy) and run one menu item —
+about five minutes, entirely optional. Setup guide:
+[`docs/sheets-setup.md`](docs/sheets-setup.md).
 
 **If you fork this repo, keep your `job-hunt/` folder out of it.** The included
 `.gitignore` does that, and `scripts/scrub-check.sh` will tell you if anything

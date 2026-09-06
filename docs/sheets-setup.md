@@ -22,7 +22,7 @@ rejected role can't be quietly un-rejected by a stray newsletter.
 
 ### 1. Copy the template
 
-> **[→ Open the Job-Hunt OS tracker template](TEMPLATE_URL_GOES_HERE)**
+> **[→ Open the Job-Hunt OS tracker template](https://docs.google.com/spreadsheets/d/1_ChlUZuTMOmS0gIFczzlLqszrSlIcJtcmpjQfT8VUQA/copy)**
 >
 > It will immediately offer to make you a copy. Say yes.
 

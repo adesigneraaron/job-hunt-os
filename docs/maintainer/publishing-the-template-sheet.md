@@ -69,11 +69,13 @@ read-only sheet people then have to work out what to do with.
 
 ## 6. Wire it into the docs
 
-Replace `TEMPLATE_URL_GOES_HERE` in `docs/sheets-setup.md` with that `/copy`
-URL, then commit.
+**Done as of 2026-09-05** — the live template is linked from
+`docs/sheets-setup.md` and the README.
+
+If you ever replace the template, update the `/copy` URL in both places:
 
 ```bash
-grep -rn "TEMPLATE_URL_GOES_HERE" docs/
+grep -rn "docs.google.com/spreadsheets" README.md docs/
 ```
 
 ## Updating the script later
