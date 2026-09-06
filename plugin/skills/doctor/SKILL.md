@@ -5,60 +5,44 @@ description: Check that Job-Hunt OS can actually run — a browser for PDF rende
 
 # Doctor
 
-Report what works and what doesn't. Fix nothing without asking.
-
-## 1. PDF rendering
-
-```
-bash <plugin>/scripts/render_pdf.sh --check
-```
-Reports which browser it found. If none: tell the user to install Google Chrome
-or Chromium, or to set `JOBHUNT_CHROME` to their browser binary. This is the
-single most common setup failure.
-
-## 2. Python
+Run the health check script and interpret the result. **Don't improvise shell
+commands for this** — the script covers every check, is identical for every
+user, and always exits 0, so a normal finding (no workspace yet, PyMuPDF not
+installed) never surfaces as a red error.
 
 ```
-bash <plugin>/scripts/pagecount.sh <any-pdf>
+bash <plugin>/scripts/doctor.sh
 ```
-This resolves Python itself (`python3`, then `python`, then `py`) and reports
-`unknown` rather than failing when PyMuPDF is absent. PyMuPDF is used only to
-assert resumes stay one page, so it's optional — the install line is
-`pip install pymupdf`.
 
-On Windows, `python3` usually doesn't exist; `python` does. That's handled. If
-no Python is found at all, say so plainly: applications still build, only the
-tracker row and the page check are skipped.
+`<plugin>` is the directory containing this skill's parent — use
+`${CLAUDE_PLUGIN_ROOT}` when it's set, otherwise resolve it from this file's own
+path.
 
-## 3. Workspace
+## What it checks
 
-Locate `job-hunt/` (CWD, then upward, then `${CLAUDE_PLUGIN_DATA}/workspace.json`).
-Report its path, or that none exists and `/job-hunt-os:onboard` will create one.
+1. **PDF rendering** — which browser was found; warns on Windows if path
+   conversion isn't available
+2. **Python** — resolves `python3`, `python`, or `py`
+3. **PyMuPDF** — optional; only used to assert resumes stay one page
+4. **Workspace** — searched here, upward, then the plugin's data pointer
+5. **Profile** — how many roles carry a real metric, and how many fields are
+   still unfilled
+6. **Base resume** — built and rendered?
+7. **Tracker** — local CSV row count; whether a Sheets webhook is configured
+   (never prints the URL)
+8. **Applications** — how many packages exist
 
-Confirm the expected subdirectories and `config/settings.json` exist.
+## Reporting it back
 
-## 4. Profile completeness
+Show the output, then add one line of interpretation. Prioritise in this order:
 
-Read `profile/master-profile.md` and report:
+- **A failing browser or Python check** blocks real work — lead with it and
+  give the exact fix.
+- **A weak profile** ("only 2 of 4 roles carry a real metric") is the most
+  valuable thing you can tell them. That ratio predicts resume quality more
+  than anything else in the system. Point at `/job-hunt-os:onboard metrics`.
+- **No workspace** is expected on a first run, not a problem. Say so, and point
+  at `/job-hunt-os:onboard`.
 
-- count of remaining `«»` markers, and which sections they're in
-- **roles with a real metric, out of total roles** — the number that matters.
-  Count roles as the `###` blocks **inside the `## Experience` section only** —
-  `###` is reserved for jobs, but scope the count anyway so a stray heading
-  can't inflate it. A role counts as having a metric when its `metrics:` list
-  has at least one entry that isn't `«»`.
-- whether `resume-base.html` exists and has been rendered
-
-If a role has no metric, name it and say what to run:
-`/job-hunt-os:onboard metrics`.
-
-## 5. Tracker
-
-Read `config/settings.json`. For `"local"`, confirm `tracker/applications.csv`
-exists and report the row count. For `"sheets"`, confirm a webhook URL is
-configured — **never print the URL itself**, only whether it's present.
-
-## Output
-
-A short status list — one line per check, pass/fail, and the exact command to
-fix each failure. No prose paragraphs.
+Don't restate every passing line in prose — the table already says it. Add
+only what the user should do next.
