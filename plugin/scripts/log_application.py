@@ -36,6 +36,28 @@ WEBHOOK_FILE = os.path.join(CONFIG_DIR, "webhook-url.txt")
 GCP_KEY_FILE = os.path.join(CONFIG_DIR, "gcp-service-account.json")
 
 
+# ---------------------------------------------------------------- sanitize --
+# Company names, titles and notes come from job postings — untrusted text off
+# the web. A spreadsheet treats a cell beginning with = + - @ (or a leading tab
+# or carriage return) as a FORMULA, so a hostile posting could make the user's
+# own tracker run something when they open it. In Google Sheets that includes
+# functions that fetch a URL, which turns a tracker row into data exfiltration.
+#
+# Prefixing with an apostrophe forces the cell to be read as text. Sheets hides
+# that apostrophe; only cells that actually start with a dangerous character are
+# touched, so ordinary values are unchanged.
+DANGEROUS_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
+
+
+def sanitize(value):
+    v = "" if value is None else str(value)
+    return "'" + v if v[:1] in DANGEROUS_PREFIXES else v
+
+
+def sanitize_row(row):
+    return [sanitize(c) for c in row]
+
+
 # ---------------------------------------------------------------- workspace --
 def find_workspace(explicit=None):
     """Explicit path, then ./job-hunt walking upward, then the plugin pointer."""
@@ -164,8 +186,8 @@ def main():
     ap.add_argument("--notes", default="")
     a = ap.parse_args()
 
-    row = [a.company, a.title, a.date, a.status, a.salary,
-           a.location, a.remote, a.jd_link, a.resume, a.notes]
+    row = sanitize_row([a.company, a.title, a.date, a.status, a.salary,
+                        a.location, a.remote, a.jd_link, a.resume, a.notes])
 
     ws = find_workspace(a.workspace)
     mode = load_settings(ws).get("tracker", "local")

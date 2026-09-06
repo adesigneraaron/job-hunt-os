@@ -7,11 +7,13 @@
 find_python() {
   local c
   if [[ -n "${JOBHUNT_PYTHON:-}" ]]; then printf '%s' "$JOBHUNT_PYTHON"; return 0; fi
-  for c in python3 python py; do
-    if command -v "$c" >/dev/null 2>&1; then
+  # 'py -3' pins the Windows launcher to Python 3; a bare 'py' can
+  # still land on a Python 2 install where one exists.
+  for c in python3 python 'py -3' py; do
+    if command -v ${c%% *} >/dev/null 2>&1; then
       # "py" is a launcher, and on Windows a bare "python" may be the Microsoft
       # Store stub that only opens the store. Check it actually runs.
-      if "$c" -c "import sys; sys.exit(0 if sys.version_info[0]==3 else 1)" >/dev/null 2>&1; then
+      if $c -c "import sys; sys.exit(0 if sys.version_info[0]==3 else 1)" >/dev/null 2>&1; then
         printf '%s' "$c"; return 0
       fi
     fi

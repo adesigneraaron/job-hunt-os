@@ -76,7 +76,11 @@ fi
 # --- 4. Profile -------------------------------------------------------------
 PROFILE="$WS/profile/master-profile.md"
 if [[ -f "$PROFILE" ]]; then
-  gaps=$(grep -c '«' "$PROFILE" 2>/dev/null || echo 0)
+  # grep -c prints 0 AND exits 1 when there are no matches, so a "|| echo 0"
+  # fallback appends a second zero and breaks the arithmetic test below.
+  # Counting occurrences with -o | wc -l always yields exactly one number.
+  gaps=$(grep -o '«' "$PROFILE" 2>/dev/null | wc -l | tr -d ' ')
+  gaps=${gaps:-0}
   if [[ -n "${PY:-}" ]]; then
     read -r roles withm weak <<<"$("$PY" - "$PROFILE" <<'PYEOF'
 import re, sys
@@ -85,11 +89,36 @@ exp = s.split("## Experience")[1].split("\n---")[0] if "## Experience" in s else
 roles = re.split(r"^### ", exp, flags=re.M)[1:]
 # A role heading still wrapped in «» is a template placeholder, not a job.
 roles = [r for r in roles if "«" not in r.split("\n")[0]]
+def metrics_body(r):
+    """Text under `metrics:`, whether written inline or as an indented list.
+
+    The old lookahead required another `key:` line after the block, so a role
+    whose metrics were the LAST thing written scored zero despite having real
+    numbers — and writing metrics last is completely natural by hand.
+    """
+    lines = r.split("\n")
+    for i, line in enumerate(lines):
+        m = re.match(r"\s*metrics:\s*(.*)$", line)
+        if not m:
+            continue
+        inline = m.group(1).strip()
+        if inline:
+            return inline
+        body = []
+        for nxt in lines[i + 1:]:
+            if not nxt.strip():
+                continue
+            # stop at the next field or the next role
+            if re.match(r"\s*[A-Za-z_][A-Za-z0-9_ -]*:\s", nxt) or nxt.startswith("###"):
+                break
+            if re.match(r"\s*[A-Za-z_][A-Za-z0-9_-]*:$", nxt):
+                break
+            body.append(nxt.strip().lstrip("-").strip())
+        return "\n".join(x for x in body if x)
+    return ""
+
 def has_metric(r):
-    m = re.search(r"metrics:\n(.*?)(?=\n[a-z_]+:)", r, re.S)
-    if not m:
-        return False
-    body = m.group(1).strip()
+    body = metrics_body(r)
     # ANY « means it is still guidance text, not a fact the user supplied.
     return bool(body) and "«" not in body
 def label(r):
