@@ -22,6 +22,28 @@ invention.
 
 If there's no profile, stop and run `/job-hunt-os:onboard` first.
 
+### Check the profile is strong enough — before building anything
+
+Run `bash <plugin>/scripts/doctor.sh` and look at the Profile line.
+
+If any role has no real metric, **say so before you build**, naming the roles:
+
+> Two of your three roles have no numbers attached — «Shift Supervisor» and
+> «Warehouse Associate». Resumes built from them will describe duties rather
+> than results, which is the difference between reading like everyone else and
+> reading like someone who moved something. Five minutes on
+> `/job-hunt-os:onboard metrics` would fix it for every future application, not
+> just this one.
+>
+> Want to do that first, or build this one now as-is?
+
+**Then respect the answer.** If they say build it, build it — don't ask twice
+and don't moralise. People skip for good reasons: a deadline, a role they're
+half-interested in, a bad memory of that job. The point is that they choose
+knowingly, once, at the moment it costs something.
+
+Skip this warning entirely when every role already carries a metric.
+
 ## Step 1 — Get the job description
 
 - URL → fetch it, asking for title, company, responsibilities, requirements,

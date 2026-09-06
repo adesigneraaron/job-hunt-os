@@ -109,6 +109,16 @@ fix persists into every future application.
 - **Profile strength:** how many roles carry a real metric, out of how many.
   State it plainly — that ratio predicts resume quality more than anything else.
   Count roles as the `###` blocks inside `## Experience` only; a role has a
-  metric when its `metrics:` list holds at least one non-`«»` entry.
+  metric when its `metrics:` list holds at least one entry containing no `«`.
+
+  **If any role was skipped, name it and say what it costs**, without nagging:
+
+  > You skipped numbers for «Shift Supervisor» and «Warehouse Associate», so
+  > those roles will read as duties rather than results. That's the one thing
+  > most worth coming back for — `/job-hunt-os:onboard metrics` picks up exactly
+  > there, and takes about five minutes.
+
+  Say it once. Skipping is a legitimate choice and people have reasons for it;
+  the job is to make sure they made it knowingly, not to talk them out of it.
 - What to run next: `/job-hunt-os:apply <job-url>`.
 - How to improve later: re-run `/job-hunt-os:onboard <section>` any time.

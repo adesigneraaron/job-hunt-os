@@ -78,7 +78,7 @@ PROFILE="$WS/profile/master-profile.md"
 if [[ -f "$PROFILE" ]]; then
   gaps=$(grep -c '«' "$PROFILE" 2>/dev/null || echo 0)
   if [[ -n "${PY:-}" ]]; then
-    read -r roles withm <<<"$("$PY" - "$PROFILE" <<'PYEOF'
+    read -r roles withm weak <<<"$("$PY" - "$PROFILE" <<'PYEOF'
 import re, sys
 s = open(sys.argv[1], encoding="utf-8", errors="replace").read()
 exp = s.split("## Experience")[1].split("\n---")[0] if "## Experience" in s else ""
@@ -92,7 +92,12 @@ def has_metric(r):
     body = m.group(1).strip()
     # ANY « means it is still guidance text, not a fact the user supplied.
     return bool(body) and "«" not in body
-print(len(roles), sum(1 for r in roles if has_metric(r)))
+def label(r):
+    h = r.split("\n")[0]
+    h = re.sub(r"\s*\([^)]*\)\s*$", "", h).strip()   # drop trailing dates
+    return h
+weak = [label(r) for r in roles if not has_metric(r)]
+print(len(roles), sum(1 for r in roles if has_metric(r)), "|".join(weak))
 PYEOF
 )"
     if [[ "${roles:-0}" -gt 0 ]]; then
@@ -100,6 +105,7 @@ PYEOF
         pass "Profile — $withm of $roles roles carry a real metric"
       else
         fail "Profile — only $withm of $roles roles carry a real metric"
+        [[ -n "${weak:-}" ]] && echo "         No numbers yet: ${weak//|/, }"
         echo "         This is the strongest predictor of resume quality."
         echo "         Strengthen it with:  /job-hunt-os:onboard metrics"
       fi
