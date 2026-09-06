@@ -28,7 +28,12 @@ With no argument, run the full flow — resuming if a partial profile exists.
    the path recorded in `${CLAUDE_PLUGIN_DATA}/workspace.json`.
 2. If found and `profile/master-profile.md` exists → say what's already filled
    and resume at the first incomplete phase, or jump to the requested section.
-3. If not found, confirm the location (default `./job-hunt/`) and scaffold:
+3. If not found, **run `pwd` and show the user the absolute path you are about
+   to create the workspace in, then wait for confirmation.** Never assume the
+   working directory is where the user thinks they are — Claude's shell does not
+   always sit where the conversation started, and silently scaffolding a
+   workspace in the wrong folder is confusing to unpick later. If the user names
+   a different location, use that. Then scaffold:
    ```
    bash <plugin>/scripts/init_workspace.sh <path>
    ```

@@ -60,7 +60,10 @@ find_workspace() {
 if WS="$(find_workspace)"; then
   pass "Workspace — $WS"
 else
-  fail "Workspace — none found (searched here, upward, and plugin data)"
+  fail "Workspace — none found"
+  echo "         Searched from: $(pwd)"
+  echo "         If that is not where you expected to be, cd to the right folder"
+  echo "         first — the shell does not always sit where you started."
   echo "         Create one with:  /job-hunt-os:onboard"
   skip "Profile — no workspace yet"
   skip "Tracker — no workspace yet"
